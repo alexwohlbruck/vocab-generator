@@ -2,14 +2,17 @@
 
 import os
 import random
+import datetime
 import json
 from lxml import html
 import requests
 
-words = list()
+doc_name = (input('Enter document name: ') or 'Vocab')
+name = (input('Enter your name: ') or 'Alex')
+date = datetime.datetime.now()
+listLength = int(input('Enter number of words (10): ') or '10')
 
-listLength = int(input('Enter number of words (10) ') or '10')
-print(listLength)
+words = list()
 
 for i in range(int(listLength) or 10):
     word = input('Word ' + str(i + 1) + ': ')
@@ -51,6 +54,9 @@ for index, word in enumerate(results):
     partOfSpeech = word['definition']['results'][0]['lexicalEntries'][0]['lexicalCategory']
     synonyms = list(map((lambda d: d['text']), word['thesaurus']['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['synonyms'][0:3]))
     sentences = list(map((lambda d: d['text']), word['sentence']['results'][0]['lexicalEntries'][0]['sentences']))
+    
+    # Output title, name, and date
+    f.write(' – '.join([doc_name, name, date.strftime('%b %d, %Y')]) + '\n\n')
     
     # Output word + pos
     f.write(str(index + 1) + '. ' + text.capitalize() + ' (' + partOfSpeech + ')' + '\n')
