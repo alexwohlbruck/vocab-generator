@@ -1,18 +1,13 @@
+# Vocab generator
 
-     ,-----.,--.                  ,--. ,---.   ,--.,------.  ,------.
-    '  .--./|  | ,---. ,--.,--. ,-|  || o   \  |  ||  .-.  \ |  .---'
-    |  |    |  || .-. ||  ||  |' .-. |`..'  |  |  ||  |  \  :|  `--, 
-    '  '--'\|  |' '-' ''  ''  '\ `-' | .'  /   |  ||  '--'  /|  `---.
-     `-----'`--' `---'  `----'  `---'  `--'    `--'`-------' `------'
-    ----------------------------------------------------------------- 
+### Setup
+- Create an account on the [Oxford Dictionaries developer console](https://developer.oxforddictionaries.com)
 
+- Add your API credentials to enviroment variables:
 
-Hi there! Welcome to Cloud9 IDE!
+| OXFORD_APP_ID  | `your app id`  |
+|----------------|----------------|
+| OXFORD_APP_KEY | `your app key` |
 
-To get you started, create some files, play with the terminal,
-or visit http://docs.c9.io for our documentation.
-If you want, you can also go watch some training videos at
-http://www.youtube.com/user/c9ide.
-
-Happy coding!
-The Cloud9 IDE team
+- Use PIP to install the `requests` package
+`pip install requests`

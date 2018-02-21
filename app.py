@@ -4,7 +4,6 @@ import os
 import random
 import datetime
 import json
-from lxml import html
 import requests
 
 doc_name = (input('Enter document name: ') or 'Vocab')
@@ -35,28 +34,31 @@ def get_dictionary_url(endpoint, word):
 
 
 def dictionary(endpoint, word):
-    return requests.get(get_dictionary_url(endpoint, word), headers=headers)
+    try:
+        return requests.get(get_dictionary_url(endpoint, word), headers=headers).json()
+    except requests.exceptions.HTTPError as err:
+        print(err)
+        return None
     
     
 results = list(map(lambda word: {
-    'definition': dictionary('definition', word).json(),
-    'thesaurus': dictionary('thesaurus', word).json(),
-    'sentence': dictionary('sentence', word).json()
+    'definition': dictionary('definition', word),
+    'thesaurus': dictionary('thesaurus', word),
+    'sentence': dictionary('sentence', word)
 }, words))
     
 f = open('output.txt', 'w')
 
+# Output title, name, and date
+f.write(' – '.join([doc_name, name, date.strftime('%b %d, %Y')]) + '\n\n')
 
 for index, word in enumerate(results):
     
     text = word['definition']['results'][0]['word']
     definition = word['definition']['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0]
     partOfSpeech = word['definition']['results'][0]['lexicalEntries'][0]['lexicalCategory']
-    synonyms = list(map((lambda d: d['text']), word['thesaurus']['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['synonyms'][0:3]))
+    synonyms = [] if type(word['thesaurus']) is None else list(map((lambda d: d['text']), word['thesaurus']['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['synonyms'][0:3]))
     sentences = list(map((lambda d: d['text']), word['sentence']['results'][0]['lexicalEntries'][0]['sentences']))
-    
-    # Output title, name, and date
-    f.write(' – '.join([doc_name, name, date.strftime('%b %d, %Y')]) + '\n\n')
     
     # Output word + pos
     f.write(str(index + 1) + '. ' + text.capitalize() + ' (' + partOfSpeech + ')' + '\n')
