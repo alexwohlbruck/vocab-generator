@@ -34,12 +34,14 @@ def get_dictionary_url(endpoint, word):
 
 
 def dictionary(endpoint, word):
-    try:
-        return requests.get(get_dictionary_url(endpoint, word), headers=headers).json()
-    except requests.exceptions.HTTPError as err:
-        print(err)
-        return None
+    r = requests.get(get_dictionary_url(endpoint, word), headers=headers)
     
+    if (r.status_code == 200):
+        return r.json()
+    else:
+        print ('Could not get ' + endpoint + ' entry for ' + word)
+        print (r)
+        return None
     
 results = list(map(lambda word: {
     'definition': dictionary('definition', word),
@@ -57,8 +59,12 @@ for index, word in enumerate(results):
     text = word['definition']['results'][0]['word']
     definition = word['definition']['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0]
     partOfSpeech = word['definition']['results'][0]['lexicalEntries'][0]['lexicalCategory']
-    synonyms = [] if type(word['thesaurus']) is None else list(map((lambda d: d['text']), word['thesaurus']['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['synonyms'][0:3]))
     sentences = list(map((lambda d: d['text']), word['sentence']['results'][0]['lexicalEntries'][0]['sentences']))
+    
+    if word['thesaurus'] is None:
+        synonyms = []
+    else:
+        synonyms = list(map((lambda d: d['text']), word['thesaurus']['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['synonyms'][0:3]))
     
     # Output word + pos
     f.write(str(index + 1) + '. ' + text.capitalize() + ' (' + partOfSpeech + ')' + '\n')
@@ -67,7 +73,8 @@ for index, word in enumerate(results):
     f.write(definition + '\n')
     
     # Output synonyms
-    f.write(', '.join(synonyms) + '\n')
+    if word['thesaurus'] is not None:
+        f.write(', '.join(synonyms) + '\n')
     
     # Output sentence
     f.write('"' + random.choice(sentences) + '"' + '\n\n')
