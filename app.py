@@ -39,7 +39,7 @@ def dictionary(endpoint, word):
     if (r.status_code == 200):
         return r.json()
     else:
-        print ('Could not get ' + endpoint + ' entry for ' + word)
+        print ('Could not get ' + endpoint + ' entry for "' + word + '"')
         print (r)
         return None
     

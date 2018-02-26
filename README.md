@@ -1,5 +1,7 @@
 # Vocab generator
 
+Creates a list of definitions, synonyms, and sentences from some given vocab words. Use with care and proceed with caution.
+
 ### Setup
 - Create an account on the [Oxford Dictionaries developer console](https://developer.oxforddictionaries.com)
 
@@ -11,6 +13,7 @@
 | OXFORD_APP_KEY | `your app key` |
 
 - Use PIP to install the `requests` package
+
 `pip install requests`
 
 ### Example output
